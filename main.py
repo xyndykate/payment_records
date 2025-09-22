@@ -57,21 +57,35 @@ def print_records():
         if not records_found:
             print("No payment records found.")
 
-if __name__ == '__main__':
-    print('1. Add new payment record')
-    print('2. View all records')
-    choice = input('Choose an option (1 or 2): ')
-    if choice == '1':
-        Apartment = input('Enter Apartment: ')
-        amount = input('Enter amount: ')
-        date = input('Enter date (YYYY-MM-DD): ')
-        save_record(Apartment, amount, date)
-        print('Record saved!')
-    elif choice == '2':
-        print('All payment records:')
-        read_records()
+def delete_record(apartment_number):
+    # Read all records
+    if not os.path.isfile(CSV_FILE):
+        print("No records to delete.")
+        return
+
+    records = []
+    deleted = False
+    with open(CSV_FILE, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        header = next(reader, None)
+        for row in reader:
+            if row[0] != apartment_number:
+                records.append(row)
+            else:
+                deleted = True
+
+    # Write back remaining records
+    with open(CSV_FILE, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        if header:
+            writer.writerow(header)
+        writer.writerows(records)
+
+    if deleted:
+        print(f"Record(s) for Apartment {apartment_number} deleted.")
     else:
-        print('Invalid choice.')
+        print(f"No record found for Apartment {apartment_number}.")
+
 # Internet Subscription Payment Records for 17 Apartments
 
 # Data structure to hold payment records
@@ -121,13 +135,17 @@ def main():
         print("\n--- Internet Subscription Payment Records ---")
         print("1. Record a Payment")
         print("2. Print All Records")
-        print("3. Exit")
-        choice = input("Choose an option (1-3): ")
+        print("3. Delete a Record")
+        print("4. Exit")
+        choice = input("Choose an option (1-4): ")
         if choice == "1":
             record_payment()
         elif choice == "2":
             print_records()
         elif choice == "3":
+            apartment_number = input("Enter apartment number to delete: ")
+            delete_record(apartment_number)
+        elif choice == "4":
             print("Goodbye!")
             break
         else:
