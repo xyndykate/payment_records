@@ -3,15 +3,15 @@ import os
 
 CSV_FILE = r'C:\Users\ADMIN\OneDrive\Documents\g_xy\internet_subscription\records.csv'
 
-def save_record(name, amount, date):
+def save_record(Apartment, amount, date):
     # Ensure the folder exists
     os.makedirs(os.path.dirname(CSV_FILE), exist_ok=True)
     file_exists = os.path.isfile(CSV_FILE)
     with open(CSV_FILE, mode='a', newline='') as file:
         writer = csv.writer(file)
         if not file_exists:
-            writer.writerow(['Name', 'Amount', 'Date'])  # header
-        writer.writerow([name, amount, date])
+            writer.writerow(['Apartment', 'Amount', 'Date'])  # header
+        writer.writerow([Apartment, amount, date])
 
 def read_records():
     if not os.path.isfile(CSV_FILE):
@@ -22,15 +22,50 @@ def read_records():
         for row in reader:
             print(row)
 
+def record_payment():
+    apartment_number = input("Enter apartment number (1-17): ")
+    amount = input("Enter payment amount: ")
+    date = input("Enter payment date (YYYY-MM-DD): ")
+    record = {
+        "apartment": apartment_number,
+        "amount": amount,
+        "date": date
+    }
+    payment_records.append(record)
+    notify_payment(record)
+    # Save to CSV file for persistence
+    save_record(apartment_number, amount, date)
+
+def notify_payment(record):
+    print(f"Payment recorded for Apartment {record['apartment']}: Amount {record['amount']} on {record['date']}")
+
+def print_records():
+    if not os.path.isfile(CSV_FILE):
+        print("No payment records found.")
+        return
+    with open(CSV_FILE, mode='r', newline='') as file:
+        reader = csv.DictReader(file)
+        records_found = False
+        print("Payment Records:")
+        for row in reader:
+            records_found = True
+            # Try to display apartment info if present, else fallback to name
+            apartment = row.get('apartment', row.get('Name', ''))
+            amount = row.get('amount', row.get('Amount', ''))
+            date = row.get('date', row.get('Date', ''))
+            print(f"Apartment {apartment}: Amount {amount} on {date}")
+        if not records_found:
+            print("No payment records found.")
+
 if __name__ == '__main__':
     print('1. Add new payment record')
     print('2. View all records')
     choice = input('Choose an option (1 or 2): ')
     if choice == '1':
-        name = input('Enter name: ')
+        Apartment = input('Enter Apartment: ')
         amount = input('Enter amount: ')
         date = input('Enter date (YYYY-MM-DD): ')
-        save_record(name, amount, date)
+        save_record(Apartment, amount, date)
         print('Record saved!')
     elif choice == '2':
         print('All payment records:')
@@ -54,6 +89,8 @@ def record_payment():
     }
     payment_records.append(record)
     notify_payment(record)
+    # Save to CSV file for persistence
+    save_record(apartment_number, amount, date)
 
 # Function to notify when a payment is recorded
 def notify_payment(record):
