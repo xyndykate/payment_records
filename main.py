@@ -49,10 +49,9 @@ def print_records():
         print("Payment Records:")
         for row in reader:
             records_found = True
-            # Try to display apartment info if present, else fallback to name
-            apartment = row.get('apartment', row.get('Name', ''))
-            amount = row.get('amount', row.get('Amount', ''))
-            date = row.get('date', row.get('Date', ''))
+            apartment = row.get('Apartment', '')
+            amount = row.get('Amount', '')
+            date = row.get('Date', '')
             print(f"Apartment {apartment}: Amount {amount} on {date}")
         if not records_found:
             print("No payment records found.")
@@ -121,10 +120,9 @@ def print_records():
         print("Payment Records:")
         for row in reader:
             records_found = True
-            # Try to display apartment info if present, else fallback to name
-            apartment = row.get('apartment', row.get('Name', ''))
-            amount = row.get('amount', row.get('Amount', ''))
-            date = row.get('date', row.get('Date', ''))
+            apartment = row.get('Apartment', '')
+            amount = row.get('Amount', '')
+            date = row.get('Date', '')
             print(f"Apartment {apartment}: Amount {amount} on {date}")
         if not records_found:
             print("No payment records found.")
