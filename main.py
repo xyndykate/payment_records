@@ -62,6 +62,11 @@ def record_payment():
         apartment_number = input("Enter apartment number (1-17): ")
         if apartment_number.isdigit() and 1 <= int(apartment_number) <= 17:
             break
+        elif (
+            apartment_number.upper().startswith(("A", "B", "C", "D"))
+            and apartment_number[1:].isdigit()
+        ):
+            break
         print("Invalid apartment number. Please enter a number between 1 and 17.")
     while True:
         amount = input("Enter payment amount: ")
